@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hostel Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: background 0.2s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: var(--background);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card h3 {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .content-section {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2 style="margin-bottom: 2rem; text-align: center; color: var(--primary);">HMS Admin</h2>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-target="overview">Overview</a></li>
+                <li><a href="#" data-target="hostels">Manage Hostels</a></li>
+                <li><a href="#" data-target="rooms">Manage Rooms</a></li>
+                <li><a href="#" data-target="students">Manage Students</a></li>
+                <li><a href="#" data-target="fees">Manage Fees</a></li>
+                <li>
+                    <form action="/api/auth/logout" method="POST" style="display:inline;"><button type="submit"
+                            class="btn"
+                            style="width:100%; text-align:left; background:none; border:none; color:var(--danger); padding:0.75rem 1rem;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <header class="header">
+                <h1>Admin Dashboard</h1>
+            </header>
+
+            <div id="overview" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Students</h3>
+                        <div class="value" id="stat-students">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Rooms</h3>
+                        <div class="value" id="stat-rooms">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Hostels</h3>
+                        <div class="value" id="stat-hostels">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Complaints</h3>
+                        <div class="value" id="stat-complaints">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hostels" class="content-section">
+                <h2>Manage Hostels</h2>
+                <button class="btn btn-primary" id="addHostelBtn" style="margin-top: 1rem;">Add Hostel</button>
+                <div id="hostel-list" style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Hostel Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hostelsTableBody">
+                            <!-- Hostels will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="rooms" class="content-section">
+                <h2>Manage Rooms</h2>
+                <div id="room-hostels" style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <!-- Hostels as cards to click on -->
+                </div>
+                <div id="room-list-container" style="display: none; margin-top: 2rem;">
+                    <h3 id="selectedHostelName"></h3>
+                    <button class="btn btn-primary" id="addRoomBtn" style="margin-top: 1rem;" data-hostel-id="">Add
+                        Room</button>
+                    <div id="room-list" style="margin-top: 1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room No</th>
+                                    <th>Capacity</th>
+                                    <th>Available Beds</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fees" class="content-section">
+                <h2>Fee Management</h2>
+                <div style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="students" class="content-section">
+                <h2>Manage Students</h2>
+                <button class="btn btn-primary" id="addStudentBtn" style="margin-top: 1rem;">Add Student</button>
+                <div id="student-list" style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.sidebar-menu a[data-target]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+
+                const target = e.currentTarget.getAttribute('data-target');
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+
+                fetchDataForSection(target);
+            });
+        });
+
+        async function apiFetch(url, options = {}) {
+            // Ensure headers include Accept: application/json
+            const headers = {
+                'Accept': 'application/json',
+                ...(options.headers || {})
+            };
+
+            try {
+                const res = await fetch(url, { ...options, headers });
+
+                if (!res.ok) {
+                    let errorMessage = `HTTP error! status: ${res.status}`;
+                    try {
+                        const errorData = await res.json();
+                        errorMessage = errorData.error || errorData.message || errorMessage;
+                    } catch (parseError) {
+                        // Response was not JSON (probably HTML from a middleware redirect)
+                        console.error('Failed to parse error response as JSON:', parseError);
+                    }
+                    throw new Error(errorMessage);
+                }
+
+                return await res.json();
+            } catch (e) {
+                console.error(`Fetch error for ${url}:`, e);
+                alert(`Error: ${e.message}`);
+                return null;
+            }
+        }
+
+        async function fetchDataForSection(section) {
+            const tableMap = {
+                hostels: 'hostelsTableBody',
+                rooms: 'roomsTableBody',
+                students: 'studentsTableBody',
+                fees: 'feesTableBody'
+            };
+
+            const tbodyId = tableMap[section];
+            if (tbodyId) {
+                document.getElementById(tbodyId).innerHTML = '<tr><td colspan="100%" style="text-align:center;">Loading...</td></tr>';
+            }
+
+            if (section === 'overview') {
+                const data = await apiFetch('/api/admin/stats');
+                if (data) {
+                    document.getElementById('stat-students').innerText = data.students || 0;
+                    document.getElementById('stat-rooms').innerText = data.rooms || 0;
+                    document.getElementById('stat-hostels').innerText = data.hostels || 0;
+                    document.getElementById('stat-complaints').innerText = data.complaints || 0;
+                }
+            } else if (section === 'hostels') {
+                loadHostels();
+            } else if (section === 'rooms') {
+                loadRooms();
+            } else if (section === 'students') {
+                loadStudents();
+            } else if (section === 'fees') {
+                loadAllFees();
+            }
+        }
+
+        async function loadAllFees() {
+            const fees = await apiFetch('/api/admin/fees');
+            if (fees) {
+                const tbody = document.getElementById('feesTableBody');
+                tbody.innerHTML = fees.length ? fees.map(f => `
+                    <tr>
+                        <td>${f.student_name}</td>
+                        <td>$${f.amount}</td>
+                        <td>${f.payment_status}</td>
+                        <td>${f.payment_date || '-'}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="4" style="text-align:center;">No fee records found</td></tr>';
+            }
+        }
+
+        async function loadHostels() {
+            const hostels = await apiFetch('/api/admin/hostels');
+            if (hostels) {
+                const tbody = document.getElementById('hostelsTableBody');
+                tbody.innerHTML = hostels.length ? hostels.map(h => `
+                    <tr>
+                        <td>${h.hostel_id}</td>
+                        <td>${h.name}</td>
+                        <td><button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteHostel(${h.hostel_id}, '${h.name}')">Delete</button></td>
+                    </tr>
+                `).join('') : '<tr><td colspan="3" style="text-align:center;">No hostels found</td></tr>';
+            }
+        }
+
+        let currentHostelId = null;
+
+        async function loadRooms() {
+            document.getElementById('room-hostels').innerHTML = '<p style="text-align:center; width:100%;">Loading hostels...</p>';
+            document.getElementById('room-hostels').style.display = 'flex';
+            document.getElementById('room-list-container').style.display = 'none';
+
+            const hostels = await apiFetch('/api/admin/hostels');
+            if (hostels) {
+                const container = document.getElementById('room-hostels');
+                container.innerHTML = hostels.length ? hostels.map(h => `
+                    <div class="stat-card" style="cursor: pointer;" onclick="loadRoomsForHostel(${h.hostel_id}, '${h.name}')">
+                        <h3>Hostel</h3>
+                        <div class="value">${h.name}</div>
+                    </div>
+                `).join('') : '<p style="text-align:center; width:100%;">No hostels found. Please add a hostel first.</p>';
+            }
+        }
+
+        async function loadRoomsForHostel(hostelId, hostelName) {
+            currentHostelId = hostelId;
+            document.getElementById('room-hostels').style.display = 'none';
+            document.getElementById('room-list-container').style.display = 'block';
+            document.getElementById('selectedHostelName').innerText = `Rooms in ${hostelName}`;
+            document.getElementById('roomsTableBody').innerHTML = '<tr><td colspan="3" style="text-align:center;">Loading rooms...</td></tr>';
+
+            const allRooms = await apiFetch('/api/admin/rooms');
+            if (allRooms) {
+                const rooms = allRooms.filter(r => r.hostel_id === hostelId);
+                const tbody = document.getElementById('roomsTableBody');
+                tbody.innerHTML = rooms.length ? rooms.map(r => `
+                    <tr>
+                        <td>${r.room_no}</td>
+                        <td>${r.capacity}</td>
+                        <td>${r.available_beds}</td>
+                        <td><button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteRoom(${r.id}, '${r.room_no}')">Delete</button></td>
+                    </tr>
+                `).join('') : '<tr><td colspan="4" style="text-align:center;">No rooms found in this hostel</td></tr>';
+            }
+        }
+
+        async function loadStudents() {
+            const students = await apiFetch('/api/admin/students');
+            if (students) {
+                const tbody = document.getElementById('studentsTableBody');
+                tbody.innerHTML = students.length ? students.map(s => `
+                    <tr>
+                        <td>${s.student_id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.email}</td>
+                        <td>${s.course}</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding:0.25rem 0.5rem;" onclick="generateFeePrompt(${s.student_id})">Generate Fee</button>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer; margin-left:0.25rem;" onclick="deleteStudent(${s.student_id}, '${s.name}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" style="text-align:center;">No students found</td></tr>';
+            }
+        }
+
+        async function generateFeePrompt(studentId) {
+            const amount = prompt('Enter Fee Amount:');
+            if (!amount || isNaN(amount)) return alert('Invalid amount');
+            const data = await apiFetch('/api/admin/fees', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ student_id: studentId, amount: parseFloat(amount) })
+            });
+            if (data) alert('Fee generated successfully!');
+        }
+
+        async function deleteHostel(id, name) {
+            if (!confirm(`Delete hostel "${name}"? This will also delete all rooms in this hostel.`)) return;
+            const data = await apiFetch(`/api/admin/hostels/${id}`, { method: 'DELETE' });
+            if (data) { alert('Hostel deleted!'); loadHostels(); fetchDataForSection('overview'); }
+        }
+
+        async function deleteRoom(id, roomNo) {
+            if (!confirm(`Delete room "${roomNo}"?`)) return;
+            const data = await apiFetch(`/api/admin/rooms/${id}`, { method: 'DELETE' });
+            if (data) {
+                alert('Room deleted!');
+                loadRoomsForHostel(currentHostelId, document.getElementById('selectedHostelName').innerText.replace('Rooms in ', ''));
+                fetchDataForSection('overview');
+            }
+        }
+
+        async function deleteStudent(id, name) {
+            if (!confirm(`Delete student "${name}"? This will remove their allocations, fees, and complaints.`)) return;
+            const data = await apiFetch(`/api/admin/students/${id}`, { method: 'DELETE' });
+            if (data) { alert('Student deleted!'); loadStudents(); fetchDataForSection('overview'); }
+        }
+
+        document.getElementById('addHostelBtn').addEventListener('click', async () => {
+            const name = prompt('Enter new hostel name:');
+            if (!name) return;
+            const data = await apiFetch('/api/admin/hostels', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            if (data) {
+                alert('Hostel added successfully!');
+                loadHostels();
+                fetchDataForSection('overview');
+            }
+        });
+
+        document.getElementById('addRoomBtn').addEventListener('click', async () => {
+            if (!currentHostelId) return;
+            const room_no = prompt('Enter Room Number (e.g. 101, A2):');
+            const capacity = prompt('Enter Total Beds / Capacity (1 bed = 1 person):');
+            if (!room_no || !capacity) return;
+            const data = await apiFetch('/api/admin/rooms', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hostel_id: currentHostelId, room_no, capacity })
+            });
+            if (data) {
+                alert('Room added!');
+                loadRoomsForHostel(currentHostelId, document.getElementById('selectedHostelName').innerText.replace('Rooms in ', ''));
+                fetchDataForSection('overview');
+            }
+        });
+
+        document.getElementById('addStudentBtn').addEventListener('click', async () => {
+            const name = prompt('Enter Student Name:');
+            const email = prompt('Enter Student Email:');
+            const password = prompt('Enter Student Password:');
+            const course = prompt('Enter Student Course:');
+            const phone = prompt('Enter Student Phone:');
+            if (!name || !email || !password) return;
+            const data = await apiFetch('/api/admin/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, course, phone })
+            });
+            if (data) {
+                alert('Student added!');
+                loadStudents();
+                fetchDataForSection('overview');
+            }
+        });
+
+        // Initial load
+        fetchDataForSection('overview');
+    </script>
+</body>
+
+</html>

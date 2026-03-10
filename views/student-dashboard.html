@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Hostel Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: background 0.2s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background: var(--background);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .content-section {
+            display: none;
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <h2 style="margin-bottom: 2rem; text-align: center; color: var(--secondary);">HMS Student</h2>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" data-target="overview">Overview</a></li>
+                <li><a href="#" data-target="profile">My Profile</a></li>
+                <li><a href="#" data-target="room">My Room</a></li>
+                <li><a href="#" data-target="fees">Fees</a></li>
+                <li><a href="#" data-target="complaints">Complaints</a></li>
+                <li>
+                    <form action="/api/auth/logout" method="POST" style="display:inline;"><button type="submit"
+                            class="btn"
+                            style="width:100%; text-align:left; background:none; border:none; color:var(--danger); padding:0.75rem 1rem;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <header class="header">
+                <h1>Student Dashboard</h1>
+            </header>
+            <div id="overview" class="content-section active">
+                <h2>Welcome, Student</h2>
+                <p>View your hostel allocation and pay fees here.</p>
+                <div id="student-overview" style="margin-top: 1rem;"></div>
+            </div>
+            <div id="profile" class="content-section">
+                <h2>My Profile</h2>
+                <div id="profileDetails"
+                    style="margin-top: 1rem; padding: 1rem; background: var(--background); border-radius: var(--radius);">
+                </div>
+            </div>
+            <div id="room" class="content-section">
+                <h2>My Room Allocation</h2>
+                <div id="roomDetails"
+                    style="margin-top: 1rem; padding: 1rem; background: var(--background); border-radius: var(--radius);">
+                </div>
+            </div>
+            <div id="fees" class="content-section">
+                <h2>Fees Status</h2>
+                <div style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="complaints" class="content-section">
+                <h2>My Complaints</h2>
+                <button class="btn btn-primary" id="addComplaintBtn" style="margin-top: 1rem;">Submit Complaint</button>
+                <div style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentComplaintsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.querySelectorAll('.sidebar-menu a[data-target]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+                const target = e.target.getAttribute('data-target');
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+                fetchData(target);
+            });
+        });
+
+        async function fetchData(section) {
+            if (section === 'profile') {
+                const res = await fetch('/api/student/profile');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('profileDetails').innerHTML = `
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>Course:</strong> ${data.course}</p>
+                        <p><strong>Phone:</strong> ${data.phone}</p>
+                    `;
+                }
+            } else if (section === 'room') {
+                const res = await fetch('/api/student/room');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.message) {
+                        document.getElementById('roomDetails').innerHTML = `<p>${data.message}</p>`;
+                    } else {
+                        document.getElementById('roomDetails').innerHTML = `
+                            <p><strong>Hostel:</strong> ${data.hostel_name}</p>
+                            <p><strong>Room No:</strong> ${data.room_no}</p>
+                            <p><strong>Room Capacity:</strong> ${data.capacity}</p>
+                        `;
+                    }
+                }
+            } else if (section === 'fees') {
+                const res = await fetch('/api/student/fees');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('feesTableBody').innerHTML = data.map(f => `
+                        <tr>
+                            <td>$${f.amount}</td>
+                            <td>${f.payment_status}</td>
+                            <td>${f.payment_date || '-'}</td>
+                            <td>
+                                ${f.payment_status === 'pending' ? `<button class="btn btn-primary" onclick="payFee(${f.fee_id})" style="padding:0.25rem 0.5rem;">Pay Now</button>` : 'Paid'}
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } else if (section === 'complaints') {
+                loadComplaints();
+            }
+        }
+
+        async function loadComplaints() {
+            const res = await fetch('/api/student/complaints');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('studentComplaintsTable').innerHTML = data.map(c => `<tr><td>${c.complaint_id}</td><td>${c.description}</td><td>${c.status}</td></tr>`).join('');
+            }
+        }
+
+        document.getElementById('addComplaintBtn').addEventListener('click', async () => {
+            const description = prompt('Describe your complaint:');
+            if (!description) return;
+            const res = await fetch('/api/student/complaints', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description })
+            });
+            if (res.ok) { alert('Complaint submitted!'); loadComplaints(); }
+            else alert('Failed to submit complaint');
+        });
+
+        async function payFee(feeId) {
+            try {
+                // 1. Create Order
+                const orderRes = await fetch('/api/student/fees/razorpay-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fee_id: feeId })
+                });
+
+                if (!orderRes.ok) throw new Error('Failed to create payment order');
+                const orderData = await orderRes.json();
+
+                // 2. Open Razorpay Checkout
+                const options = {
+                    key: orderData.key_id,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "Hostel Management System",
+                    description: "Student Monthly Fee",
+                    order_id: orderData.order_id,
+                    handler: async function (response) {
+                        // 3. Verify Payment
+                        const verifyRes = await fetch('/api/student/fees/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                fee_id: feeId
+                            })
+                        });
+
+                        if (verifyRes.ok) {
+                            alert('Payment successful!');
+                            fetchData('fees');
+                        } else {
+                            alert('Payment verification failed');
+                        }
+                    },
+                    prefill: {
+                        name: "", // Can be fetched from session if needed
+                        email: "",
+                        contact: ""
+                    },
+                    theme: {
+                        color: "#4F46E5"
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+
+            } catch (e) {
+                console.error(e);
+                alert('An error occurred during payment');
+            }
+        }
+
+        fetchData('overview');
+    </script>
+</body>
+
+</html>
