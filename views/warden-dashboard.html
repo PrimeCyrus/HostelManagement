@@ -8,92 +8,251 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Institutional Premium Color Palette */
+            --bg-primary: #F8F9FA;
+            --bg-secondary: #FFFFFF;
+            --brand-primary: #0B2447; /* Deep Navy Blue */
+            --brand-secondary: #19376D;
+            --accent: #A5D7E8;
+            --text-main: #212529;
+            --text-muted: #6C757D;
+            --border: #E9ECEF;
+            --success: #198754;
+            --danger: #DC3545;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(11, 36, 71, 0.08);
+            --shadow-lg: 0 12px 24px rgba(11, 36, 71, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .serif-text {
+            font-family: 'Merriweather', serif;
+            color: var(--brand-primary);
+        }
+
         .dashboard-container {
             display: flex;
             min-height: 100vh;
         }
 
         .sidebar {
-            width: 250px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
+            width: 260px;
+            background: var(--brand-primary);
+            color: #FFFFFF;
             padding: 2rem 1rem;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+
+        .sidebar h2 {
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .sidebar-menu {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .sidebar-menu li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .sidebar-menu a {
+        .sidebar-menu a, .sidebar-menu button {
             display: block;
-            padding: 0.75rem 1rem;
-            color: var(--text-main);
+            padding: 0.85rem 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
-            border-radius: var(--radius);
-            transition: background 0.2s;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background: var(--primary);
-            color: white;
+            background: var(--brand-secondary);
+            color: #FFFFFF;
+        }
+
+        .sidebar-menu button {
+            color: #ff8787;
+        }
+
+        .sidebar-menu button:hover {
+            background: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
         }
 
         .main-content {
             flex: 1;
-            padding: 2rem;
-            background: var(--background);
+            padding: 2.5rem 3rem;
+            background: var(--bg-primary);
+            overflow-y: auto;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
         }
 
-        .content-section {
-            display: none;
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        .content-section.active {
-            display: block;
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
 
         .stat-card {
-            background: var(--surface);
+            background: var(--bg-secondary);
             padding: 1.5rem;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
-            text-align: center;
+            border-top: 4px solid var(--brand-primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .stat-card h3 {
-            font-size: 0.875rem;
             color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
+            margin-top: 0;
+            font-family: 'Inter', sans-serif;
         }
 
         .stat-card .value {
-            font-size: 1.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--brand-primary);
+        }
+
+        .content-section {
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--brand-primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #F8F9FA;
+            border-top: 1px solid var(--border);
+        }
+        
+        th:first-child { border-top-left-radius: var(--radius-md); border-left: 1px solid var(--border); }
+        th:last-child { border-top-right-radius: var(--radius-md); border-right: 1px solid var(--border); }
+        
+        td:first-child { border-left: 1px solid var(--border); }
+        td:last-child { border-right: 1px solid var(--border); }
+        
+        tr:last-child td:first-child { border-bottom-left-radius: var(--radius-md); border-bottom: 1px solid var(--border); }
+        tr:last-child td:last-child { border-bottom-right-radius: var(--radius-md); border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: 1px solid var(--border); }
+
+        tbody tr:hover {
+            background: #FAFAFA;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: #FFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-secondary);
+            box-shadow: var(--shadow-sm);
         }
     </style>
 </head>
@@ -101,17 +260,17 @@
 <body>
     <div class="dashboard-container">
         <nav class="sidebar">
-            <h2 style="margin-bottom: 2rem; text-align: center; color: var(--secondary);">HMS Warden</h2>
+            <h2>Warden Panel</h2>
             <ul class="sidebar-menu">
                 <li><a href="#" class="active" data-target="overview">Overview</a></li>
                 <li><a href="#" data-target="rooms">View Rooms</a></li>
                 <li><a href="#" data-target="students">View Students</a></li>
                 <li><a href="#" data-target="fees">View Fees</a></li>
+                <li><a href="#" data-target="leaves">Leave Approvals</a></li>
                 <li><a href="#" data-target="complaints">Complaints</a></li>
                 <li>
-                    <form action="/api/auth/logout" method="POST" style="display:inline;"><button type="submit"
-                            class="btn"
-                            style="width:100%; text-align:left; background:none; border:none; color:var(--danger); padding:0.75rem 1rem;">Logout</button>
+                    <form action="/api/auth/logout" method="POST" style="display:inline;">
+                        <button type="submit">Logout</button>
                     </form>
                 </li>
             </ul>
@@ -162,17 +321,39 @@
             </div>
             <div id="fees" class="content-section">
                 <h2>Fee Overview</h2>
+                <div style="margin-top: 1rem; overflow-x: auto;">
+                    <table style="min-width: 750px;">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Month / Year</th>
+                                <th>Amount</th>
+                                <th>Late Fine</th>
+                                <th>Status</th>
+                                <th>Warning</th>
+                                <th>Payment Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wardenFeesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="leaves" class="content-section">
+                <h2>Leave Approvals</h2>
                 <div style="margin-top: 1rem;">
                     <table>
                         <thead>
                             <tr>
                                 <th>Student</th>
-                                <th>Amount</th>
+                                <th>Destination</th>
+                                <th>Reason</th>
+                                <th>Dates</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="wardenFeesTable"></tbody>
+                        <tbody id="wardenLeavesTable"></tbody>
                     </table>
                 </div>
             </div>
@@ -268,7 +449,10 @@
                             <td>${r.room_no}</td>
                             <td>${r.hostel_name || 'N/A'}</td>
                             <td>${r.capacity}</td>
-                            <td>${r.available_beds}</td>
+                            <td>${r.available_beds === 0
+                                ? '<span style="color:#842029;background:#f8d7da;padding:0.15rem 0.55rem;border-radius:4px;font-size:0.82rem;font-weight:600;">All Occupied</span>'
+                                : `<span style="color:#0f5132;background:#d1e7dd;padding:0.15rem 0.55rem;border-radius:4px;font-size:0.82rem;font-weight:600;">${r.available_beds} free</span>`
+                            }</td>
                         </tr>
                     `).join('') : '<tr><td colspan="4" style="text-align:center;">No rooms found</td></tr>';
                 }
@@ -289,7 +473,11 @@
                             <td>${s.email}</td>
                             <td>
                                 ${s.room_no ?
-                            `<button class="btn" style="background:var(--danger);padding:0.25rem 0.5rem;" onclick="deallocateRoom(${s.allocation_id})">Deallocate</button>` :
+                            `<select id="room-realloc-${s.allocation_id}" style="padding:0.25rem; max-width:150px;">
+                                <option value="">Change Room</option>
+                                ${availableRooms.filter(r => r.id !== s.room_id).map(r => `<option value="${r.id}">${r.room_no} (${r.available_beds} beds)</option>`).join('')}
+                            </select>
+                            <button class="btn btn-primary" style="padding:0.25rem 0.5rem;margin-left:0.5rem;" onclick="reallocateRoom(${s.allocation_id})">Move</button>` :
                             `<select id="room-select-${s.student_id}" style="padding:0.25rem; max-width:150px;">
                                         <option value="">Select Room</option>
                                         ${availableRooms.map(r => `<option value="${r.id}">${r.hostel_name} - ${r.room_no} (${r.available_beds} beds)</option>`).join('')}
@@ -305,12 +493,46 @@
                 if (data) {
                     document.getElementById('wardenFeesTable').innerHTML = data.length ? data.map(f => `
                         <tr>
-                            <td>${f.student_name}</td>
-                            <td>$${f.amount}</td>
-                            <td>${f.payment_status}</td>
-                            <td>${f.payment_date || '-'}</td>
+                            <td><strong>${f.student_name}</strong></td>
+                            <td>${f.month ? `${f.month} ${f.year}` : '<span style="color:var(--text-muted)">—</span>'}</td>
+                            <td>&#8377;${parseFloat(f.amount).toLocaleString()}</td>
+                            <td style="color:${parseFloat(f.late_fine)>0?'#dc3545':'inherit'};font-weight:${parseFloat(f.late_fine)>0?'600':'normal'}">
+                                ${parseFloat(f.late_fine)>0 ? `&#8377;${parseFloat(f.late_fine).toLocaleString()}` : '—'}
+                            </td>
+                            <td>
+                                <span style="padding:0.2rem 0.6rem;border-radius:4px;font-size:0.82rem;font-weight:600;
+                                    background:${f.payment_status==='paid'?'#d1e7dd':f.payment_status==='overdue'?'#f8d7da':'#fff3cd'};
+                                    color:${f.payment_status==='paid'?'#0f5132':f.payment_status==='overdue'?'#842029':'#664d03'}">
+                                    ${f.payment_status.toUpperCase()}
+                                </span>
+                            </td>
+                            <td>${f.warning_sent ? '<span style="color:#dc3545;font-weight:600;">&#9888; Sent</span>' : '<span style="color:var(--text-muted)">—</span>'}</td>
+                            <td>${f.payment_date || '—'}</td>
                         </tr>
-                    `).join('') : '<tr><td colspan="4" style="text-align:center;">No fee records found</td></tr>';
+                    `).join('') : '<tr><td colspan="7" style="text-align:center;">No fee records found</td></tr>';
+                }
+            } else if (section === 'leaves') {
+                const data = await apiFetch('/api/warden/leaves');
+                if (data) {
+                    document.getElementById('wardenLeavesTable').innerHTML = data.length ? data.map(l => `
+                        <tr>
+                            <td>${l.student_name}</td>
+                            <td>${l.destination}</td>
+                            <td>${l.reason}</td>
+                            <td>${l.start_date} to ${l.end_date}</td>
+                            <td><span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; 
+                                background: ${l.status === 'approved' ? '#d1e7dd' : l.status === 'denied' ? '#f8d7da' : '#fff3cd'}; 
+                                color: ${l.status === 'approved' ? '#0f5132' : l.status === 'denied' ? '#842029' : '#664d03'}">
+                                ${l.status.toUpperCase()}</span>
+                            </td>
+                            <td>
+                                ${l.status === 'pending' ? `
+                                    <button class="btn btn-primary" onclick="updateLeaveStatus(${l.leave_id}, 'approved')" style="padding:0.25rem 0.5rem;font-size:0.875rem;margin-right:0.5rem;">Approve</button>
+                                    <button class="btn" onclick="updateLeaveStatus(${l.leave_id}, 'denied')" style="background:var(--danger);padding:0.25rem 0.5rem;font-size:0.875rem;color:white;border:none;">Deny</button>
+                                ` : '-'}
+                            </td>
+                        </tr>
+                    `).join('') : '<tr><td colspan="6" style="text-align:center;">No leave requests found</td></tr>';
                 }
             } else if (section === 'complaints') {
                 const data = await apiFetch('/api/warden/complaints');
@@ -339,6 +561,15 @@
             if (data) { alert('Complaint resolved!'); fetchData('complaints'); }
         }
 
+        async function updateLeaveStatus(id, newStatus) {
+            const data = await apiFetch(`/api/warden/leaves/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (data) { alert(`Leave status changed to ${newStatus}!`); fetchData('leaves'); }
+        }
+
         async function allocateRoom(studentId) {
             const roomId = document.getElementById(`room-select-${studentId}`).value;
             if (!roomId) return alert('Please select a room');
@@ -350,10 +581,15 @@
             if (data) { alert('Room allocated!'); fetchData('students'); fetchData('overview'); }
         }
 
-        async function deallocateRoom(allocationId) {
-            if (!confirm('Are you sure you want to deallocate this student?')) return;
-            const data = await apiFetch(`/api/warden/deallocate/${allocationId}`, { method: 'DELETE' });
-            if (data) { alert('Student deallocated!'); fetchData('students'); fetchData('overview'); }
+        async function reallocateRoom(allocationId) {
+            const roomId = document.getElementById(`room-realloc-${allocationId}`).value;
+            if (!roomId) return alert('Please select a new room to move the student to.');
+            const data = await apiFetch(`/api/warden/reallocate/${allocationId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ new_room_id: roomId })
+            });
+            if (data) { alert('Room changed successfully!'); fetchData('students'); fetchData('overview'); }
         }
 
         fetchData('overview');

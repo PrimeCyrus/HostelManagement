@@ -1,11 +1,15 @@
 const cron = require('node-cron');
 const db = require('../database/database');
 
-// Function to generate fees for all students
 const generateMonthlyFees = () => {
     console.log('Running monthly fee generation job...');
     const amount = 5000; // Default monthly fee
     const status = 'pending';
+
+    const now = new Date();
+    const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long' });
+    const currentMonth = monthFormatter.format(now);
+    const currentYear = now.getFullYear();
 
     db.all('SELECT student_id FROM Students', [], (err, students) => {
         if (err) {
@@ -15,8 +19,8 @@ const generateMonthlyFees = () => {
 
         students.forEach(student => {
             db.run(
-                'INSERT INTO Fees (student_id, amount, payment_status) VALUES (?, ?, ?)',
-                [student.student_id, amount, status],
+                'INSERT INTO Fees (student_id, amount, payment_status, month, year) VALUES (?, ?, ?, ?, ?)',
+                [student.student_id, amount, status, currentMonth, currentYear],
                 (err) => {
                     if (err) {
                         console.error(`Error generating fee for student ${student.student_id}:`, err.message);

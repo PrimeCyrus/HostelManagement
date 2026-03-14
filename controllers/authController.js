@@ -14,15 +14,52 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Set session
-        req.session.userId = user.id;
-        req.session.role = user.role;
-
-        return res.status(200).json({
-            message: 'Login successful',
-            role: user.role,
-            redirectUrl: `/${user.role}-dashboard` // e.g. /admin-dashboard
-        });
+        // If student, check approval status
+        if (user.role === 'student') {
+            const db = require('../database/database');
+            return new Promise((resolve, reject) => {
+                db.get('SELECT approval_status FROM Students WHERE user_id = ?', [user.id], (err, studentRow) => {
+                    if (err) {
+                        console.error('Error fetching student status:', err.message);
+                        return res.status(500).json({ message: 'Server error retrieving status' });
+                    }
+                    if (studentRow && studentRow.approval_status === 'pending') {
+                        req.session.userId = user.id;
+                        req.session.role = user.role;
+                        return res.status(200).json({
+                            message: 'Application pending. Redirecting to payment/status page',
+                            role: user.role,
+                            redirectUrl: '/payment'
+                        });
+                    } else if (studentRow && studentRow.approval_status === 'rejected') {
+                        return res.status(403).json({ message: 'Your application was rejected by the Admin.' });
+                    } else {
+                        // User is approved or logic defaults to ok
+                        req.session.userId = user.id;
+                        req.session.role = user.role;
+                        
+                        return res.status(200).json({
+                            message: 'Login successful',
+                            role: user.role,
+                            redirectUrl: `/${user.role}-dashboard`
+                        });
+                    }
+                });
+            });
+        } else {
+            // Set session for admin/warden
+            req.session.userId = user.id;
+            req.session.role = user.role;
+            if (user.role === 'warden' && user.hostel_id) {
+                req.session.hostel_id = user.hostel_id;
+            }
+            
+            return res.status(200).json({
+                message: 'Login successful',
+                role: user.role,
+                redirectUrl: `/${user.role}-dashboard` 
+            });
+        }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server error' });

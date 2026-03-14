@@ -8,113 +8,379 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            /* Institutional Premium Color Palette */
+            --bg-primary: #F8F9FA;
+            --bg-secondary: #FFFFFF;
+            --brand-primary: #0B2447;
+            /* Deep Navy Blue */
+            --brand-secondary: #19376D;
+            --accent: #A5D7E8;
+            --text-main: #212529;
+            --text-muted: #6C757D;
+            --border: #E9ECEF;
+            --success: #198754;
+            --danger: #DC3545;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(11, 36, 71, 0.08);
+            --shadow-lg: 0 12px 24px rgba(11, 36, 71, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-text {
+            font-family: 'Merriweather', serif;
+            color: var(--brand-primary);
+        }
+
         .dashboard-container {
             display: flex;
             min-height: 100vh;
         }
 
         .sidebar {
-            width: 250px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
+            width: 260px;
+            background: var(--brand-primary);
+            color: #FFFFFF;
             padding: 2rem 1rem;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+
+        .sidebar h2 {
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .sidebar-menu {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
         .sidebar-menu li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .sidebar-menu a {
+        .sidebar-menu a,
+        .sidebar-menu button {
             display: block;
-            padding: 0.75rem 1rem;
-            color: var(--text-main);
+            padding: 0.85rem 1.2rem;
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
-            border-radius: var(--radius);
-            transition: background 0.2s;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background: var(--primary);
-            color: white;
+            background: var(--brand-secondary);
+            color: #FFFFFF;
+        }
+
+        .sidebar-menu button {
+            color: #ff8787;
+        }
+
+        .sidebar-menu button:hover {
+            background: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
         }
 
         .main-content {
             flex: 1;
-            padding: 2rem;
-            background: var(--background);
+            padding: 2.5rem 3rem;
+            background: var(--bg-primary);
+            overflow-y: auto;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .stat-card {
-            background: var(--surface);
+            background: var(--bg-secondary);
             padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--brand-primary);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .stat-card h3 {
             color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
+            margin-top: 0;
+            font-family: 'Inter', sans-serif;
         }
 
         .stat-card .value {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--brand-primary);
         }
 
         .content-section {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
             display: none;
+            margin-bottom: 2rem;
         }
 
         .content-section.active {
             display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-section h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
         }
 
         th,
         td {
             text-align: left;
-            padding: 0.75rem;
+            padding: 1rem;
             border-bottom: 1px solid var(--border);
         }
 
         th {
             font-weight: 600;
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            color: var(--brand-primary);
+            font-size: 0.85rem;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #F8F9FA;
+            border-top: 1px solid var(--border);
+        }
+
+        th:first-child {
+            border-top-left-radius: var(--radius-md);
+            border-left: 1px solid var(--border);
+        }
+
+        th:last-child {
+            border-top-right-radius: var(--radius-md);
+            border-right: 1px solid var(--border);
+        }
+
+        td:first-child {
+            border-left: 1px solid var(--border);
+        }
+
+        td:last-child {
+            border-right: 1px solid var(--border);
+        }
+
+        tr:last-child td:first-child {
+            border-bottom-left-radius: var(--radius-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td:last-child {
+            border-bottom-right-radius: var(--radius-md);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: #FAFAFA;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: #FFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary);
+            padding: 0.6rem 1.25rem;
+            border-radius: var(--radius-md);
+        }
+
+        .btn-outline:hover {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--brand-secondary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal-body label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--brand-secondary);
+        }
+
+        .modal-body input,
+        .modal-body select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
@@ -122,17 +388,19 @@
 <body>
     <div class="dashboard-container">
         <nav class="sidebar">
-            <h2 style="margin-bottom: 2rem; text-align: center; color: var(--primary);">HMS Admin</h2>
+            <h2>Hostel Admin</h2>
             <ul class="sidebar-menu">
                 <li><a href="#" class="active" data-target="overview">Overview</a></li>
-                <li><a href="#" data-target="hostels">Manage Hostels</a></li>
+                <li><a href="#" data-target="hostels">Manage Hostel</a></li>
                 <li><a href="#" data-target="rooms">Manage Rooms</a></li>
                 <li><a href="#" data-target="students">Manage Students</a></li>
                 <li><a href="#" data-target="fees">Manage Fees</a></li>
+                <li><a href="#" data-target="wardens">Manage Wardens</a></li>
+                <li><a href="#" data-target="applications">Applications</a></li>
+                <li><a href="#" data-target="reports">Reports</a></li>
                 <li>
-                    <form action="/api/auth/logout" method="POST" style="display:inline;"><button type="submit"
-                            class="btn"
-                            style="width:100%; text-align:left; background:none; border:none; color:var(--danger); padding:0.75rem 1rem;">Logout</button>
+                    <form action="/api/auth/logout" method="POST" style="display:inline;">
+                        <button type="submit">Logout</button>
                     </form>
                 </li>
             </ul>
@@ -151,27 +419,52 @@
                     <div class="stat-card">
                         <h3>Total Rooms</h3>
                         <div class="value" id="stat-rooms">0</div>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.4rem; font-weight: 500;">
+                            Capacity: <span id="stat-capacity">0</span> &mdash; Free: <span id="stat-available">0</span>
+                        </div>
                     </div>
                     <div class="stat-card">
-                        <h3>Hostels</h3>
+                        <h3>Residences</h3>
                         <div class="value" id="stat-hostels">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Wardens</h3>
+                        <div class="value" id="stat-wardens">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Applications</h3>
+                        <div class="value" id="stat-applications">0</div>
                     </div>
                     <div class="stat-card">
                         <h3>Pending Complaints</h3>
                         <div class="value" id="stat-complaints">0</div>
                     </div>
+                    <div class="stat-card">
+                        <h3>Occupancy</h3>
+                        <div class="value"><span id="stat-occupancy">0</span><span style="font-size: 1.4rem;">%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Fees Collected</h3>
+                        <div class="value" style="color:var(--success);">&#8377;<span id="stat-fees-collected">0</span>
+                        </div>
+                        <div style="font-size:0.85rem; color:var(--danger); margin-top:0.4rem; font-weight: 500;">
+                            Pending: &#8377;<span id="stat-fees-pending">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="hostels" class="content-section">
-                <h2>Manage Hostels</h2>
-                <button class="btn btn-primary" id="addHostelBtn" style="margin-top: 1rem;">Add Hostel</button>
+                <h2>Manage Residences</h2>
+                <button class="btn btn-primary" id="addHostelBtn" style="margin-top: 1rem;">Add Residence</button>
                 <div id="hostel-list" style="margin-top: 1rem;">
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Hostel Name</th>
+                                <th>Residence Name</th>
+                                <th>Gender</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -209,14 +502,134 @@
 
             <div id="fees" class="content-section">
                 <h2>Fee Management</h2>
-                <div style="margin-top: 1rem;">
-                    <table>
+
+                <!-- Bulk Fee Generator Panel -->
+                <div id="bulk-fee-panel" style="
+                    background: linear-gradient(135deg, #0B2447 0%, #19376D 100%);
+                    border-radius: var(--radius-lg);
+                    padding: 1.75rem 2rem;
+                    color: white;
+                    margin-top: 1rem;
+                    margin-bottom: 2rem;
+                    box-shadow: var(--shadow-lg);
+                ">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+                        <div>
+                            <h3 style="color:white; margin:0; font-size:1.2rem; font-family:'Merriweather',serif;">Bulk
+                                Fee Generator</h3>
+                            <p style="margin:0.25rem 0 0; font-size:0.875rem; color:rgba(255,255,255,0.7);">Generate
+                                fees for all students in a hostel with one click</p>
+                        </div>
+                        <div id="bulk-student-badge" style="
+                            background: rgba(255,255,255,0.15);
+                            border: 1px solid rgba(255,255,255,0.3);
+                            border-radius: 999px;
+                            padding: 0.35rem 1rem;
+                            font-size: 0.875rem;
+                            font-weight: 600;
+                            display:none;
+                        ">— students</div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:1rem; align-items:end;">
+                        <div>
+                            <label
+                                style="display:block; font-size:0.8rem; font-weight:600; color:rgba(255,255,255,0.8); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px;">Hostel</label>
+                            <select id="bulk-hostel" style="
+                                width:100%; padding:0.6rem 0.75rem;
+                                border:1px solid rgba(255,255,255,0.5);
+                                border-radius:var(--radius-sm);
+                                background:#fff;
+                                color:#1a1a2e; font-size:0.9rem;
+                                cursor:pointer;
+                            " onchange="previewBulkStudents()">
+                                <option value="">Select Hostel...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.8rem; font-weight:600; color:rgba(255,255,255,0.8); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px;">Month</label>
+                            <select id="bulk-month" style="
+                                width:100%; padding:0.6rem 0.75rem;
+                                border:1px solid rgba(255,255,255,0.5);
+                                border-radius:var(--radius-sm);
+                                background:#fff;
+                                color:#1a1a2e; font-size:0.9rem;
+                            ">
+                                <option value="">Select Month...</option>
+                                <option>January</option>
+                                <option>February</option>
+                                <option>March</option>
+                                <option>April</option>
+                                <option>May</option>
+                                <option>June</option>
+                                <option>July</option>
+                                <option>August</option>
+                                <option>September</option>
+                                <option>October</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.8rem; font-weight:600; color:rgba(255,255,255,0.8); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px;">Year</label>
+                            <input type="number" id="bulk-year" placeholder="e.g. 2025" value="2025" style="
+                                    width:100%; padding:0.6rem 0.75rem; box-sizing:border-box;
+                                    border:1px solid rgba(255,255,255,0.3);
+                                    border-radius:var(--radius-sm);
+                                    background:rgba(255,255,255,0.1);
+                                    color:white; font-size:0.9rem;
+                                " />
+                        </div>
+                        <div>
+                            <label
+                                style="display:block; font-size:0.8rem; font-weight:600; color:rgba(255,255,255,0.8); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px;">Amount
+                                (&#8377;)</label>
+                            <input type="number" id="bulk-amount" placeholder="e.g. 5000" min="1" style="
+                                    width:100%; padding:0.6rem 0.75rem; box-sizing:border-box;
+                                    border:1px solid rgba(255,255,255,0.3);
+                                    border-radius:var(--radius-sm);
+                                    background:rgba(255,255,255,0.1);
+                                    color:white; font-size:0.9rem;
+                                " />
+                        </div>
+                        <div>
+                            <button onclick="generateBulkFee()" style="
+                                padding:0.65rem 1.5rem;
+                                background:white;
+                                color:var(--brand-primary);
+                                border:none;
+                                border-radius:var(--radius-sm);
+                                font-weight:700;
+                                font-size:0.9rem;
+                                cursor:pointer;
+                                font-family:'Inter',sans-serif;
+                                transition:var(--transition);
+                                white-space:nowrap;
+                            " onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='white'">
+                                &#9889; Generate Fees
+                            </button>
+                        </div>
+                    </div>
+                    <div id="bulk-error" style="margin-top:0.75rem;color:#fca5a5;font-size:0.875rem;display:none;">
+                    </div>
+                </div>
+
+                <!-- Fee Records Table -->
+                <div style="overflow-x: auto;">
+                    <table style="min-width: 900px;">
                         <thead>
                             <tr>
                                 <th>Student</th>
+                                <th>Month / Year</th>
                                 <th>Amount</th>
+                                <th>Late Fine</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Warning</th>
+                                <th>Payment Date</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="feesTableBody"></tbody>
@@ -226,7 +639,7 @@
 
             <div id="students" class="content-section">
                 <h2>Manage Students</h2>
-                <button class="btn btn-primary" id="addStudentBtn" style="margin-top: 1rem;">Add Student</button>
+                <button class="btn btn-primary" onclick="openStudentModal()" style="margin-top: 1rem;">Add Student</button>
                 <div id="student-list" style="margin-top: 1rem;">
                     <table>
                         <thead>
@@ -235,6 +648,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Course</th>
+                                <th>Assigned Hostel</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -242,7 +656,174 @@
                     </table>
                 </div>
             </div>
+
+            <div id="wardens" class="content-section">
+                <h2>Manage Wardens</h2>
+                <button class="btn btn-primary" onclick="openWardenModal()" style="margin-top: 1rem;">Add
+                    Warden</button>
+                <div id="warden-list" style="margin-top: 1rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Assigned Hostel</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wardensTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="applications" class="content-section">
+                <h2>Pending Applications</h2>
+                <div id="applications-list" style="margin-top:1rem;overflow-x:auto;">
+                    <table style="min-width:900px;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Course &amp; Preference</th>
+                                <th>Reg. Fee</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="reports" class="content-section">
+                <h2>Reports</h2>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="exportCSV('students')">Export Students CSV</button>
+                    <button class="btn btn-primary" onclick="exportCSV('fees')">Export Fees CSV</button>
+                    <button class="btn btn-primary" onclick="exportCSV('rooms')">Export Rooms CSV</button>
+                </div>
+            </div>
         </main>
+    </div>
+
+    <!-- Warden Modal -->
+    <div class="modal-overlay" id="wardenModal" onclick="closeWardenModal(event)" style="display:none;">
+        <div class="modal-content" onclick="event.stopPropagation()" style="max-width:400px;">
+            <div class="modal-header">
+                <h2 id="wardenModalTitle" class="serif-text">Add Warden</h2>
+                <button class="modal-close" onclick="closeWardenModal(event)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="wardenForm">
+                    <input type="hidden" id="warden_id">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="warden_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="warden_email" required>
+                    </div>
+                    <div class="form-group" id="warden_password_group">
+                        <label>Password</label>
+                        <input type="password" id="warden_password">
+                    </div>
+                    <div class="form-group">
+                        <label>Assign Hostel</label>
+                        <select id="warden_hostel_id">
+                            <option value="">No specific hostel (All access)</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions" style="margin-top:1.5rem;">
+                        <button type="button" class="btn btn-outline" onclick="closeWardenModal(event)">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Warden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="studentModalTitle">Add New Student</h2>
+                <button class="modal-close" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="studentForm">
+                    <input type="hidden" id="edit_student_id">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="student_name">Full Name *</label>
+                            <input type="text" id="student_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student_email">Email Address *</label>
+                            <input type="email" id="student_email" required>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="student_password">Password *</label>
+                            <input type="password" id="student_password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student_phone">Phone Number *</label>
+                            <input type="text" id="student_phone" required>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="student_course">Course/Program *</label>
+                            <input type="text" id="student_course" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student_guardian_name">Parent/Guardian Name *</label>
+                            <input type="text" id="student_guardian_name" required>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="student_guardian_contact">Parent/Guardian Contact *</label>
+                            <input type="text" id="student_guardian_contact" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="student_gender">Gender *</label>
+                            <select id="student_gender" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="student_address">Permanent Address *</label>
+                        <input type="text" id="student_address" required>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label for="student_alloc_hostel">Assigned Hostel (Optional)</label>
+                            <select id="student_alloc_hostel" onchange="loadRoomsForStudentForm()">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="student_alloc_room">Assigned Room (Optional)</label>
+                            <select id="student_alloc_room">
+                                <option value="">Select hostel first...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions" style="margin-top: 1.5rem;">
+                        <button type="button" class="btn" style="background:var(--bg-primary); border:1px solid var(--border);" onclick="closeStudentModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveStudentBtn">Add & Approve Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -296,7 +877,9 @@
                 hostels: 'hostelsTableBody',
                 rooms: 'roomsTableBody',
                 students: 'studentsTableBody',
-                fees: 'feesTableBody'
+                fees: 'feesTableBody',
+                wardens: 'wardensTableBody',
+                applications: 'applicationsTableBody'
             };
 
             const tbodyId = tableMap[section];
@@ -311,6 +894,13 @@
                     document.getElementById('stat-rooms').innerText = data.rooms || 0;
                     document.getElementById('stat-hostels').innerText = data.hostels || 0;
                     document.getElementById('stat-complaints').innerText = data.complaints || 0;
+                    if (document.getElementById('stat-wardens')) document.getElementById('stat-wardens').innerText = data.wardens || 0;
+                    if (document.getElementById('stat-applications')) document.getElementById('stat-applications').innerText = data.pending_applications || 0;
+                    if (document.getElementById('stat-occupancy')) document.getElementById('stat-occupancy').innerText = data.occupancy_rate || 0;
+                    if (document.getElementById('stat-fees-collected')) document.getElementById('stat-fees-collected').innerText = data.fees_collected || 0;
+                    if (document.getElementById('stat-fees-pending')) document.getElementById('stat-fees-pending').innerText = data.fees_pending || 0;
+                    if (document.getElementById('stat-capacity')) document.getElementById('stat-capacity').innerText = data.total_capacity || 0;
+                    if (document.getElementById('stat-available')) document.getElementById('stat-available').innerText = data.available_beds || 0;
                 }
             } else if (section === 'hostels') {
                 loadHostels();
@@ -319,9 +909,26 @@
             } else if (section === 'students') {
                 loadStudents();
             } else if (section === 'fees') {
+                // Set default year to current year
+                document.getElementById('bulk-year').value = new Date().getFullYear();
+                // Populate hostel dropdown
+                const hostels = await apiFetch('/api/admin/hostels');
+                if (hostels) {
+                    const sel = document.getElementById('bulk-hostel');
+                    const currentVal = sel.value;
+                    sel.innerHTML = '<option value="">Select Hostel...</option>' +
+                        hostels.map(h => `<option value="${h.hostel_id}">${h.name}</option>`).join('');
+                    if (currentVal) sel.value = currentVal;
+                }
                 loadAllFees();
+            } else if (section === 'wardens') {
+                loadWardens();
+            } else if (section === 'applications') {
+                loadApplications();
             }
         }
+
+        const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
         async function loadAllFees() {
             const fees = await apiFetch('/api/admin/fees');
@@ -329,12 +936,142 @@
                 const tbody = document.getElementById('feesTableBody');
                 tbody.innerHTML = fees.length ? fees.map(f => `
                     <tr>
-                        <td>${f.student_name}</td>
-                        <td>$${f.amount}</td>
-                        <td>${f.payment_status}</td>
-                        <td>${f.payment_date || '-'}</td>
+                        <td><strong>${f.student_name}</strong></td>
+                        <td>${f.month ? `${f.month} ${f.year}` : '-'}</td>
+                        <td>₹${parseFloat(f.amount).toLocaleString()}</td>
+                        <td style="color: ${parseFloat(f.late_fine) > 0 ? 'var(--danger)' : 'inherit'}; font-weight: ${parseFloat(f.late_fine) > 0 ? '600' : 'normal'}">
+                            ${parseFloat(f.late_fine) > 0 ? `₹${parseFloat(f.late_fine).toLocaleString()}` : '—'}
+                        </td>
+                        <td>
+                            <span style="padding:0.2rem 0.6rem; border-radius:4px; font-size:0.82rem; font-weight:600;
+                                background:${f.payment_status === 'paid' ? '#d1e7dd' : f.payment_status === 'overdue' ? '#f8d7da' : '#fff3cd'};
+                                color:${f.payment_status === 'paid' ? '#0f5132' : f.payment_status === 'overdue' ? '#842029' : '#664d03'}">
+                                ${f.payment_status.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>${f.warning_sent ? '<span style="color:var(--danger);font-weight:600;">⚠ Sent</span>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+                        <td>${f.payment_date || '—'}</td>
+                        <td style="white-space:nowrap;">
+                            <button class="btn" onclick="editFee(${f.fee_id}, '${f.month || ''}', ${f.year || new Date().getFullYear()}, ${f.amount}, '${f.payment_status}')" style="padding:0.2rem 0.5rem;font-size:0.8rem;background:var(--brand-secondary);color:white;border:none;border-radius:4px;cursor:pointer;margin-right:2px;">Edit</button>
+                            <button class="btn" onclick="deleteFee(${f.fee_id})" style="padding:0.2rem 0.5rem;font-size:0.8rem;background:var(--danger);color:white;border:none;border-radius:4px;cursor:pointer;margin-right:2px;">Delete</button>
+                            ${f.payment_status !== 'paid' ? `
+                            <button class="btn" onclick="applyFine(${f.fee_id})" style="padding:0.2rem 0.5rem;font-size:0.8rem;background:#fd7e14;color:white;border:none;border-radius:4px;cursor:pointer;margin-right:2px;">+Fine</button>
+                            ${!f.warning_sent ? `<button class="btn" onclick="sendWarning(${f.fee_id})" style="padding:0.2rem 0.5rem;font-size:0.8rem;background:var(--danger);color:white;border:none;border-radius:4px;cursor:pointer;">⚠ Warn</button>` : ''}
+                            ` : ''}
+                        </td>
                     </tr>
-                `).join('') : '<tr><td colspan="4" style="text-align:center;">No fee records found</td></tr>';
+                `).join('') : '<tr><td colspan="8" style="text-align:center;">No fee records found</td></tr>';
+            }
+        }
+
+        async function applyFine(feeId) {
+            const fineAmt = prompt('Enter late fine amount (₹):');
+            if (!fineAmt || isNaN(fineAmt) || parseFloat(fineAmt) <= 0) return alert('Enter a valid fine amount.');
+            const data = await apiFetch(`/api/admin/fees/${feeId}/fine`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fine_amount: parseFloat(fineAmt) })
+            });
+            if (data) { alert('Late fine applied!'); loadAllFees(); }
+        }
+
+        async function sendWarning(feeId) {
+            if (!confirm('Mark this warning as sent?')) return;
+            const data = await apiFetch(`/api/admin/fees/${feeId}/warning`, { method: 'PUT' });
+            if (data) { alert('Warning marked as sent!'); loadAllFees(); }
+        }
+
+        // ----- Bulk Fee Generator -----
+        async function previewBulkStudents() {
+            const hostelId = document.getElementById('bulk-hostel').value;
+            const badge = document.getElementById('bulk-student-badge');
+            if (!hostelId) { badge.style.display = 'none'; return; }
+            const hostelName = document.getElementById('bulk-hostel')
+                .options[document.getElementById('bulk-hostel').selectedIndex].text;
+            badge.textContent = `Selected: ${hostelName}`;
+            badge.style.display = 'block';
+        }
+
+        async function generateBulkFee() {
+            const hostelId = document.getElementById('bulk-hostel').value;
+            const month = document.getElementById('bulk-month').value;
+            const year = document.getElementById('bulk-year').value;
+            const amount = document.getElementById('bulk-amount').value;
+            const errEl = document.getElementById('bulk-error');
+
+            errEl.style.display = 'none';
+
+            if (!hostelId) { errEl.textContent = 'Please select a hostel.'; errEl.style.display = 'block'; return; }
+            if (!month) { errEl.textContent = 'Please select a month.'; errEl.style.display = 'block'; return; }
+            if (!year || isNaN(year)) { errEl.textContent = 'Please enter a valid year.'; errEl.style.display = 'block'; return; }
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) { errEl.textContent = 'Please enter a valid fee amount.'; errEl.style.display = 'block'; return; }
+
+            const btn = document.querySelector('#bulk-fee-panel button');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '&#9203; Generating...';
+
+            const data = await apiFetch('/api/admin/fees/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    hostel_id: parseInt(hostelId),
+                    amount: parseFloat(amount),
+                    month,
+                    year: parseInt(year)
+                })
+            });
+
+            btn.disabled = false;
+            btn.innerHTML = originalHTML;
+
+            if (data) {
+                alert(`\u2705 ${data.message}`);
+                loadAllFees();
+            }
+        }
+
+        async function editFee(feeId, currentMonth, currentYear, currentAmount, currentStatus) {
+            const amount = prompt('Fee Amount (₹):', currentAmount);
+            if (amount === null) return;
+            if (isNaN(amount) || parseFloat(amount) <= 0) return alert('Enter a valid amount.');
+
+            const monthIdx = prompt(`Month (1-12):\n${MONTH_NAMES.map((m, i) => `${i + 1}=${m}`).join(', ')}`, MONTH_NAMES.indexOf(currentMonth) + 1 || '');
+            if (monthIdx === null) return;
+            const month = MONTH_NAMES[parseInt(monthIdx) - 1] || null;
+
+            const year = prompt('Year (e.g. 2025):', currentYear);
+            if (year === null) return;
+            if (isNaN(year)) return alert('Enter a valid year.');
+
+            const statusInput = prompt('Payment Status (pending / paid / overdue):', currentStatus);
+            if (statusInput === null) return;
+            const status = statusInput.trim().toLowerCase();
+            if (!['pending', 'paid', 'overdue'].includes(status)) return alert('Status must be: pending, paid, or overdue.');
+
+            const data = await apiFetch(`/api/admin/fees/${feeId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: parseFloat(amount), month, year: parseInt(year), payment_status: status })
+            });
+            if (data) { alert('Fee updated successfully!'); loadAllFees(); }
+        }
+
+        async function deleteFee(feeId) {
+            if (!confirm('Are you sure you want to delete this fee record? This action cannot be undone.')) return;
+            const data = await apiFetch(`/api/admin/fees/${feeId}`, { method: 'DELETE' });
+            if (data) {
+                alert('Fee record deleted successfully!');
+                loadAllFees();
+            }
+        }
+
+        async function deleteFee(feeId) {
+            if (!confirm('Are you sure you want to delete this fee record? This action cannot be undone.')) return;
+            const data = await apiFetch(`/api/admin/fees/${feeId}`, { method: 'DELETE' });
+            if (data) {
+                alert('Fee record deleted successfully!');
+                loadAllFees();
             }
         }
 
@@ -342,13 +1079,19 @@
             const hostels = await apiFetch('/api/admin/hostels');
             if (hostels) {
                 const tbody = document.getElementById('hostelsTableBody');
-                tbody.innerHTML = hostels.length ? hostels.map(h => `
+                tbody.innerHTML = hostels.length ? hostels.map(h => {
+                    const genderLabel = h.gender === 'male' ? '<span style="color:#1a73e8;font-weight:600;">&#9794; Boys</span>' : h.gender === 'female' ? '<span style="color:#e91e8c;font-weight:600;">&#9792; Girls</span>' : '<span style="color:#6c757d;font-weight:600;">&#127968; Mixed</span>';
+                    return `
                     <tr>
                         <td>${h.hostel_id}</td>
                         <td>${h.name}</td>
-                        <td><button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteHostel(${h.hostel_id}, '${h.name}')">Delete</button></td>
+                        <td>${genderLabel}</td>
+                        <td>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--secondary); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="editHostel(${h.hostel_id}, '${h.name}', '${h.gender || ''}')">Edit</button>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteHostel(${h.hostel_id}, '${h.name}')">Delete</button>
+                        </td>
                     </tr>
-                `).join('') : '<tr><td colspan="3" style="text-align:center;">No hostels found</td></tr>';
+                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">No hostels found</td></tr>';
             }
         }
 
@@ -386,26 +1129,34 @@
                     <tr>
                         <td>${r.room_no}</td>
                         <td>${r.capacity}</td>
-                        <td>${r.available_beds}</td>
-                        <td><button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteRoom(${r.id}, '${r.room_no}')">Delete</button></td>
+                        <td>${r.available_beds === 0
+                        ? '<span style="color:#842029;background:#f8d7da;padding:0.15rem 0.55rem;border-radius:4px;font-size:0.82rem;font-weight:600;">All Occupied</span>'
+                        : `<span style="color:#0f5132;background:#d1e7dd;padding:0.15rem 0.55rem;border-radius:4px;font-size:0.82rem;font-weight:600;">${r.available_beds} free</span>`
+                    }</td>
+                        <td>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--secondary); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="editRoom(${r.id}, '${r.room_no}', ${r.capacity})">Edit</button>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteRoom(${r.id}, '${r.room_no}')">Delete</button>
+                        </td>
                     </tr>
                 `).join('') : '<tr><td colspan="4" style="text-align:center;">No rooms found in this hostel</td></tr>';
             }
         }
 
+        let allStudents = [];
         async function loadStudents() {
-            const students = await apiFetch('/api/admin/students');
-            if (students) {
+            allStudents = await apiFetch('/api/admin/students') || [];
+            if (allStudents) {
                 const tbody = document.getElementById('studentsTableBody');
-                tbody.innerHTML = students.length ? students.map(s => `
+                tbody.innerHTML = allStudents.length ? allStudents.map(s => `
                     <tr>
                         <td>${s.student_id}</td>
                         <td>${s.name}</td>
                         <td>${s.email}</td>
                         <td>${s.course}</td>
-                        <td>
-                            <button class="btn btn-primary" style="padding:0.25rem 0.5rem;" onclick="generateFeePrompt(${s.student_id})">Generate Fee</button>
-                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer; margin-left:0.25rem;" onclick="deleteStudent(${s.student_id}, '${s.name}')">Delete</button>
+                        <td>${s.hostel_name ? `<span style="color:var(--brand-primary);font-weight:600;">${s.hostel_name}</span>` : '<span style="color:var(--text-muted);">Unassigned</span>'}</td>
+                        <td style="white-space:nowrap;">
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--secondary); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="editStudentModal(${s.student_id})">Edit</button>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer; margin-left:0.25rem;" onclick="deleteStudent(${s.student_id}, '${s.name}')">Del</button>
                         </td>
                     </tr>
                 `).join('') : '<tr><td colspan="5" style="text-align:center;">No students found</td></tr>';
@@ -413,14 +1164,19 @@
         }
 
         async function generateFeePrompt(studentId) {
-            const amount = prompt('Enter Fee Amount:');
-            if (!amount || isNaN(amount)) return alert('Invalid amount');
+            const amount = prompt('Enter Fee Amount (₹):');
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) return alert('Enter a valid fee amount.');
+            const monthIdx = prompt(`Enter Month Number (1-12):\n1=Jan, 2=Feb, ... 12=Dec`);
+            const month = MONTH_NAMES[parseInt(monthIdx) - 1];
+            if (!month) return alert('Enter a valid month number (1-12).');
+            const year = prompt('Enter Year (e.g. 2025):');
+            if (!year || isNaN(year)) return alert('Enter a valid year.');
             const data = await apiFetch('/api/admin/fees', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ student_id: studentId, amount: parseFloat(amount) })
+                body: JSON.stringify({ student_id: studentId, amount: parseFloat(amount), month, year: parseInt(year) })
             });
-            if (data) alert('Fee generated successfully!');
+            if (data) { alert(`Fee for ${month} ${year} generated!`); loadAllFees(); }
         }
 
         async function deleteHostel(id, name) {
@@ -445,13 +1201,49 @@
             if (data) { alert('Student deleted!'); loadStudents(); fetchDataForSection('overview'); }
         }
 
+        async function editHostel(id, oldName, oldGender) {
+            const name = prompt('Enter new hostel name:', oldName);
+            if (!name) return;
+            const genderInput = prompt('Hostel gender (male / female / mixed):', oldGender || 'mixed');
+            const gender = ['male', 'female', 'mixed'].includes(genderInput?.trim().toLowerCase())
+                ? genderInput.trim().toLowerCase() : (oldGender || 'mixed');
+            const data = await apiFetch(`/api/admin/hostels/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, gender })
+            });
+            if (data) { alert('Hostel updated!'); loadHostels(); }
+        }
+
+        async function editRoom(id, oldRoomNo, oldCapacity) {
+            const room_no = prompt('Enter new room number:', oldRoomNo);
+            const capacity = prompt('Enter new capacity:', oldCapacity);
+            if (!room_no || !capacity) return;
+            const data = await apiFetch(`/api/admin/rooms/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_no, capacity })
+            });
+            if (data) {
+                alert('Room updated!');
+                loadRoomsForHostel(currentHostelId, document.getElementById('selectedHostelName').innerText.replace('Rooms in ', ''));
+            }
+        }
+
+        async function editStudent(id, oldName, oldCourse, oldPhone) {
+            // Deprecated via modal implementation, keeping as stub
+        }
+
         document.getElementById('addHostelBtn').addEventListener('click', async () => {
             const name = prompt('Enter new hostel name:');
             if (!name) return;
+            const genderInput = prompt('Hostel gender (male / female / mixed):');
+            const gender = ['male', 'female', 'mixed'].includes(genderInput?.trim().toLowerCase())
+                ? genderInput.trim().toLowerCase() : 'mixed';
             const data = await apiFetch('/api/admin/hostels', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name })
+                body: JSON.stringify({ name, gender })
             });
             if (data) {
                 alert('Hostel added successfully!');
@@ -477,24 +1269,370 @@
             }
         });
 
-        document.getElementById('addStudentBtn').addEventListener('click', async () => {
-            const name = prompt('Enter Student Name:');
-            const email = prompt('Enter Student Email:');
-            const password = prompt('Enter Student Password:');
-            const course = prompt('Enter Student Course:');
-            const phone = prompt('Enter Student Phone:');
-            if (!name || !email || !password) return;
-            const data = await apiFetch('/api/admin/students', {
-                method: 'POST',
+        // STUDENT MODAL LOGIC
+        async function openStudentModal() {
+            document.getElementById('studentForm').reset();
+            document.getElementById('edit_student_id').value = '';
+            document.getElementById('studentModalTitle').innerText = 'Add New Student';
+            document.getElementById('saveStudentBtn').innerText = 'Add & Approve Student';
+            document.getElementById('student_password').required = true;
+            document.getElementById('student_password').placeholder = '';
+            
+            await loadHostelsForStudentForm();
+            
+            const sm = document.getElementById('studentModal'); 
+            sm.style.display = 'flex'; 
+            sm.classList.add('active');
+        }
+
+        async function editStudentModal(id) {
+            const s = allStudents.find(st => st.student_id === id);
+            if (!s) return;
+            document.getElementById('studentForm').reset();
+            document.getElementById('edit_student_id').value = id;
+            document.getElementById('studentModalTitle').innerText = 'Edit Student Details';
+            document.getElementById('saveStudentBtn').innerText = 'Save Changes';
+            
+            document.getElementById('student_name').value = s.name || '';
+            document.getElementById('student_email').value = s.email || '';
+            document.getElementById('student_phone').value = s.phone || '';
+            document.getElementById('student_course').value = s.course || '';
+            document.getElementById('student_guardian_name').value = s.guardian_name || '';
+            document.getElementById('student_guardian_contact').value = s.guardian_contact || '';
+            document.getElementById('student_address').value = s.address || '';
+            document.getElementById('student_gender').value = s.gender || 'male';
+
+            document.getElementById('student_password').required = false;
+            document.getElementById('student_password').placeholder = 'Leave blank to keep unchanged...';
+            
+            await loadHostelsForStudentForm(s.alloc_hostel_id, s.alloc_room_id);
+
+            const sm = document.getElementById('studentModal'); 
+            sm.style.display = 'flex'; 
+            sm.classList.add('active');
+        }
+
+        async function loadHostelsForStudentForm(selectedHostelId = null, selectedRoomId = null) {
+            const hostels = await apiFetch('/api/admin/hostels') || [];
+            const select = document.getElementById('student_alloc_hostel');
+            select.innerHTML = '<option value="">Unassigned</option>' + 
+                hostels.map(h => `<option value="${h.hostel_id}" ${selectedHostelId == h.hostel_id ? 'selected' : ''}>${h.name}</option>`).join('');
+            
+            if (selectedHostelId) {
+                await loadRoomsForStudentForm(selectedRoomId);
+            } else {
+                document.getElementById('student_alloc_room').innerHTML = '<option value="">Select hostel first...</option>';
+            }
+        }
+
+        async function loadRoomsForStudentForm(selectedRoomId = null) {
+            const hostelId = document.getElementById('student_alloc_hostel').value;
+            const roomSelect = document.getElementById('student_alloc_room');
+            if (!hostelId) {
+                roomSelect.innerHTML = '<option value="">Select hostel first...</option>';
+                return;
+            }
+            
+            const rooms = await apiFetch('/api/admin/rooms') || [];
+            const hRooms = rooms.filter(r => r.hostel_id == hostelId);
+            roomSelect.innerHTML = '<option value="">Unassigned</option>' + 
+                hRooms.map(r => `<option value="${r.id}" ${selectedRoomId == r.id ? 'selected' : ''}>${r.room_no} (Beds free: ${r.available_beds})</option>`).join('');
+        }
+
+        function closeStudentModal(e) {
+            if (e) e.preventDefault();
+            const sm = document.getElementById('studentModal'); 
+            sm.classList.remove('active'); 
+            sm.style.display = 'none';
+        }
+
+        document.getElementById('studentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('saveStudentBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+
+            const editId = document.getElementById('edit_student_id').value;
+            const payload = {
+                name: document.getElementById('student_name').value,
+                email: document.getElementById('student_email').value,
+                phone: document.getElementById('student_phone').value,
+                course: document.getElementById('student_course').value,
+                guardian_name: document.getElementById('student_guardian_name').value,
+                guardian_contact: document.getElementById('student_guardian_contact').value,
+                address: document.getElementById('student_address').value,
+                gender: document.getElementById('student_gender').value,
+                alloc_room_id: document.getElementById('student_alloc_room').value || null
+            };
+
+            const pw = document.getElementById('student_password').value;
+            if (pw) payload.password = pw;
+
+            const method = editId ? 'PUT' : 'POST';
+            const url = editId ? `/api/admin/students/${editId}` : '/api/admin/students';
+
+            const data = await apiFetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, course, phone })
+                body: JSON.stringify(payload)
             });
+
             if (data) {
-                alert('Student added!');
+                alert(editId ? 'Student updated successfully!' : 'Student added and approved successfully!');
+                closeStudentModal();
                 loadStudents();
                 fetchDataForSection('overview');
+            } else {
+                alert('Failed to save student. Check console for details.');
+            }
+            
+            btn.textContent = originalText;
+            btn.disabled = false;
+        });
+
+        async function loadWardens() {
+            const wardens = await apiFetch('/api/admin/wardens');
+            if (wardens) {
+                const tbody = document.getElementById('wardensTableBody');
+                tbody.innerHTML = wardens.length ? wardens.map(w => `
+                    <tr>
+                        <td>${w.id}</td>
+                        <td><strong>${w.name}</strong></td>
+                        <td>${w.email}</td>
+                        <td>${w.hostel_name ? `<span style="color:var(--brand-primary);font-weight:600;">${w.hostel_name}</span>` : '<span style="color:var(--text-muted);">Unassigned</span>'}</td>
+                        <td style="white-space:nowrap;">
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--secondary); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="openWardenModal(${w.id}, '${w.name}', '${w.email}', ${w.hostel_id || 'null'})">Edit</button>
+                            <button class="btn" style="padding:0.25rem 0.5rem; background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteWarden(${w.id}, '${w.name}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" style="text-align:center;">No wardens found</td></tr>';
+            }
+        }
+
+        async function openWardenModal(id = null, name = '', email = '', hostelId = null) {
+            document.getElementById('wardenModalTitle').textContent = id ? 'Edit Warden' : 'Add Warden';
+            document.getElementById('warden_id').value = id || '';
+            document.getElementById('warden_name').value = name;
+            document.getElementById('warden_email').value = email;
+
+            const pwdGroup = document.getElementById('warden_password_group');
+            const pwdInput = document.getElementById('warden_password');
+            if (id) {
+                pwdGroup.style.display = 'none';
+                pwdInput.removeAttribute('required');
+            } else {
+                pwdGroup.style.display = 'block';
+                pwdInput.setAttribute('required', 'true');
+                pwdInput.value = '';
+            }
+
+            // Load hostels into the dropdown
+            const hostels = await apiFetch('/api/admin/hostels');
+            const select = document.getElementById('warden_hostel_id');
+            if (hostels) {
+                select.innerHTML = '<option value="">Unassigned (All Access)</option>' +
+                    hostels.map(h => `<option value="${h.hostel_id}" ${hostelId === h.hostel_id ? 'selected' : ''}>${h.name}</option>`).join('');
+            }
+
+            const wm = document.getElementById('wardenModal'); wm.style.display = ''; wm.classList.add('active');
+        }
+
+        function closeWardenModal(e) {
+            if (e) e.preventDefault();
+            const wmc = document.getElementById('wardenModal'); wmc.classList.remove('active'); wmc.style.display = 'none';
+        }
+
+        document.getElementById('wardenForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('warden_id').value;
+            const name = document.getElementById('warden_name').value;
+            const email = document.getElementById('warden_email').value;
+            const hostel_id = document.getElementById('warden_hostel_id').value;
+
+            if (id) {
+                // Edit Warden
+                const data = await apiFetch(`/api/admin/wardens/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, hostel_id: hostel_id || null })
+                });
+                if (data) { alert('Warden updated!'); closeWardenModal(); loadWardens(); }
+            } else {
+                // Add Warden
+                const password = document.getElementById('warden_password').value;
+                const data = await apiFetch('/api/admin/wardens', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, hostel_id: hostel_id || null })
+                });
+                if (data) { alert('Warden added!'); closeWardenModal(); loadWardens(); }
             }
         });
+
+        async function deleteWarden(id, name) {
+            if (!confirm(`Delete warden "${name}"?`)) return;
+            const data = await apiFetch(`/api/admin/wardens/${id}`, { method: 'DELETE' });
+            if (data) { alert('Warden deleted!'); loadWardens(); }
+        }
+
+        async function loadApplications() {
+            const apps = await apiFetch('/api/admin/applications/pending');
+            if (!apps) return;
+            const tbody = document.getElementById('applicationsTableBody');
+            if (!apps.length) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No pending applications</td></tr>';
+                return;
+            }
+            tbody.innerHTML = apps.map(a => {
+                const genderLabel = a.gender === 'female'
+                    ? '<span style="color:#e91e8c;font-weight:600;">&#9792; Female</span>'
+                    : '<span style="color:#1a73e8;font-weight:600;">&#9794; Male</span>';
+                return `
+                <tr id="app-row-${a.student_id}">
+                    <td>${a.student_id}</td>
+                    <td>
+                        <div style="font-weight:600;">${a.name}</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">${a.email}</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">Phone: ${a.phone}</div>
+                    </td>
+                    <td>${genderLabel}</td>
+                    <td>
+                        <div>${a.course}</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);">Pref: ${a.preferred_hostel_name || 'None'}</div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${a.reg_fee_status === 'paid' ? 'status-paid' : 'status-pending'}">${a.reg_fee_status || 'unpaid'}</span>
+                    </td>
+                    <td>
+                        <select id="hostel-sel-${a.student_id}" style="padding:0.5rem;border:1px solid var(--border);border-radius:var(--radius-sm);min-width:180px;" onchange="loadRoomsForAlloc(${a.student_id})">
+                            <option value="">Select Hostel...</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="room-sel-${a.student_id}" style="padding:0.5rem;border:1px solid var(--border);border-radius:var(--radius-sm);min-width:150px;">
+                            <option value="">Select hostel first</option>
+                        </select>
+                    </td>
+                    <td style="white-space:nowrap;">
+                        <button class="btn" style="padding:0.4rem 0.6rem; background:var(--success); color:white; border:none; border-radius:4px; font-weight:600; cursor:pointer;" onclick="confirmAlloc(${a.student_id}, '${a.email}', '${a.name}')" title="Approve & Allocate Room">&#10003; Allocate</button>
+                        <button class="btn" style="padding:0.4rem 0.6rem; background:var(--danger); color:white; border:none; border-radius:4px; font-weight:600; cursor:pointer;" onclick="rejectApp(${a.student_id}, '${a.email}', '${a.name}')" title="Reject Application">&#10007; Reject</button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            // Pre-load hostel dropdowns for each app
+            apps.forEach(a => _loadAllocHostels(a.student_id, a.gender || 'male'));
+        }
+
+        // Internal: fetch gender-matching hostels and populate hostel select
+        async function _loadAllocHostels(studentId, gender) {
+            const hostels = await apiFetch(`/api/public/hostels/available?gender=${gender}`);
+            const sel = document.getElementById(`hostel-sel-${studentId}`);
+            if (!sel) return;
+            if (!hostels || !hostels.length) {
+                sel.innerHTML = '<option value="">No eligible hostels with free rooms</option>';
+                return;
+            }
+            sel.innerHTML = '<option value="">Select hostel...</option>' +
+                hostels.map(h => `<option value="${h.hostel_id}" data-rooms='${JSON.stringify(h.rooms)}'>${h.name} (${h.gender})</option>`).join('');
+        }
+
+        function showAllocPanel(studentId, gender, prefHostel) {
+            // Hide all other open panels first
+            document.querySelectorAll('[id^="alloc-panel-"]').forEach(p => p.style.display = 'none');
+            const panel = document.getElementById(`alloc-panel-${studentId}`);
+            if (panel) panel.style.display = 'table-row';
+        }
+
+        function loadRoomsForAlloc(studentId) {
+            const hostelSel = document.getElementById(`hostel-sel-${studentId}`);
+            const roomSel = document.getElementById(`room-sel-${studentId}`);
+            const selected = hostelSel.options[hostelSel.selectedIndex];
+            if (!selected || !selected.value) { roomSel.innerHTML = '<option value="">Select hostel first</option>'; return; }
+            const rooms = JSON.parse(selected.getAttribute('data-rooms') || '[]');
+            roomSel.innerHTML = '<option value="">Select room...</option>' +
+                rooms.map(r => `<option value="${r.room_id}">Room ${r.room_no} &mdash; ${r.available_beds} bed(s) free</option>`).join('');
+        }
+
+        async function confirmAlloc(studentId, email, name) {
+            const roomId = document.getElementById(`room-sel-${studentId}`).value;
+            if (!roomId) return alert('Please select a room first.');
+            const data = await apiFetch(`/api/admin/applications/${studentId}/approve-with-room`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_id: parseInt(roomId) })
+            });
+            if (data) {
+                if (confirm('\u2705 Application approved and allocated!\n\nWould you like to send an approval email to the student?')) {
+                    const subject = encodeURIComponent('Hostel Application Approved');
+                    const body = encodeURIComponent(`Dear ${name},\n\nWe are pleased to inform you that your hostel application has been approved and a room has been allocated to you.\n\nYou can now log in to the student dashboard to view your room details and manage your account.\n\nRegards,\nHostel Administration`);
+                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+                }
+                loadApplications();
+                fetchDataForSection('overview');
+            }
+        }
+
+        async function rejectApp(id, email, name) {
+            if (!confirm('Reject this application?')) return;
+            const data = await apiFetch(`/api/admin/applications/${id}/reject`, { method: 'PUT' });
+            if (data) { 
+                if (confirm('Application rejected.\n\nWould you like to send a rejection email to the student?')) {
+                    const subject = encodeURIComponent('Update on Hostel Application');
+                    const body = encodeURIComponent(`Dear ${name},\n\nThank you for applying to our residence halls. Unfortunately, we are unable to accommodate your application at this time.\n\nIf you have any questions, please contact the administration office.\n\nRegards,\nHostel Administration`);
+                    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+                }
+                loadApplications(); 
+            }
+        }
+
+        async function processApplication(id, action) {
+            if (!confirm(`Are you sure you want to ${action} this application?`)) return;
+            const data = await apiFetch(`/api/admin/applications/${id}/${action}`, { method: 'PUT' });
+            if (data) {
+                alert(`Application ${action}d!`);
+                loadApplications();
+                fetchDataForSection('overview');
+            }
+        }
+
+        async function exportCSV(type) {
+            let data = [];
+            let headers = [];
+            if (type === 'students') {
+                data = await apiFetch('/api/admin/students');
+                if (!data || !data.length) return alert('No students data');
+                headers = ['student_id', 'name', 'email', 'course', 'phone'];
+            } else if (type === 'fees') {
+                data = await apiFetch('/api/admin/fees');
+                if (!data || !data.length) return alert('No fees data');
+                headers = ['fee_id', 'student_name', 'month', 'year', 'amount', 'late_fine', 'payment_status', 'payment_date', 'warning_sent'];
+            } else if (type === 'rooms') {
+                data = await apiFetch('/api/admin/rooms');
+                if (!data || !data.length) return alert('No rooms data');
+                headers = ['id', 'room_no', 'hostel_name', 'capacity', 'available_beds'];
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+            data.forEach(row => {
+                let rowData = headers.map(header => {
+                    let cell = row[header] === null || row[header] === undefined ? '' : row[header];
+                    // Escape double quotes inside values by replacing " with ""
+                    cell = String(cell).replace(/"/g, '""');
+                    return `"${cell}"`;
+                }).join(",");
+                csvContent += rowData + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${type}_report.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         // Initial load
         fetchDataForSection('overview');

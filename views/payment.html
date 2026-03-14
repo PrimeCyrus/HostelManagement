@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Status - Hostel Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .payment-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background: var(--background);
+        }
+        .payment-card {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .status-pending { color: #f59e0b; }
+        .status-success { color: var(--success); }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card" id="paymentContent">
+            <h2>Loading Application Status...</h2>
+        </div>
+    </div>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        async function fetchStatus() {
+            try {
+                // Fetch the student's current profile and fees
+                const profileRes = await fetch('/api/student/profile');
+                if (!profileRes.ok) throw new Error('Not logged in or missing data');
+                const profile = await profileRes.json();
+                
+                const feesRes = await fetch('/api/student/fees');
+                const fees = await feesRes.json();
+                
+                // Assuming the first fee or only fee generated during reg is the registration fee
+                const regFee = fees.find(f => f.amount === 100) || fees[0]; // Logic depends on how reg fee is distinguished, we used 100
+
+                const container = document.getElementById('paymentContent');
+
+                if (regFee && regFee.payment_status === 'pending') {
+                    // Needs to pay registration fee
+                    container.innerHTML = `
+                        <div class="status-icon status-pending">ℹ️</div>
+                        <h2 style="margin-bottom: 1rem;">Registration Fee Required</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                            Hello ${profile.name}, to complete your application, please pay the non-refundable registration fee of <strong>₹${regFee.amount}</strong>.
+                        </p>
+                        <button class="btn btn-primary" id="payBtn" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                            Pay Application Fee (₹${regFee.amount})
+                        </button>
+                    `;
+
+                    document.getElementById('payBtn').addEventListener('click', () => payFee(regFee.fee_id));
+
+                } else if (profile.approval_status === 'pending') {
+                    // Fee paid, waiting for admin approval
+                    container.innerHTML = `
+                        <div class="status-icon status-pending">⏳</div>
+                        <h2 style="margin-bottom: 1rem;">Application Under Review</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                            Hello ${profile.name}, your registration fee has been received and your application is currently under review by the Admin. Please check back later.
+                        </p>
+                        <form action="/api/auth/logout" method="POST">
+                            <button type="submit" class="btn" style="border: 1px solid var(--border); background: transparent;">Logout</button>
+                        </form>
+                    `;
+                } else if (profile.approval_status === 'rejected') {
+                    // Rejected
+                     container.innerHTML = `
+                        <div class="status-icon" style="color: var(--danger);">❌</div>
+                        <h2 style="margin-bottom: 1rem; color: var(--danger);">Application Rejected</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                            We're sorry, but your application for the hostel has been rejected by the Administration.
+                        </p>
+                        <form action="/api/auth/logout" method="POST">
+                            <button type="submit" class="btn" style="border: 1px solid var(--border); background: transparent;">Logout</button>
+                        </form>
+                    `;
+                } else {
+                    // Approved
+                    window.location.href = '/student-dashboard';
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('paymentContent').innerHTML = `
+                    <h2>Access Denied</h2>
+                    <p>Please <a href="/">log in</a> to view this page.</p>
+                `;
+            }
+        }
+
+        async function payFee(feeId) {
+            try {
+                // Create Order
+                const orderRes = await fetch('/api/student/fees/razorpay-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fee_id: feeId })
+                });
+
+                if (!orderRes.ok) throw new Error('Failed to create payment order');
+                const orderData = await orderRes.json();
+
+                if (orderData.mock) {
+                    const amountRs = (orderData.amount / 100).toFixed(2);
+                    const confirmed = await showMockCheckout(amountRs, orderData.order_id);
+                    if (!confirmed) return;
+                    
+                    const verifyRes = await fetch('/api/student/fees/verify-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ razorpay_order_id: orderData.order_id, fee_id: feeId, mock: true })
+                    });
+                    
+                    if (verifyRes.ok) { 
+                        alert('Payment successful!');
+                        window.location.reload();
+                    } else {
+                        alert('Payment verification failed');
+                    }
+                } else {
+                    // Open Razorpay Checkout (Live mode fallback)
+                    const options = {
+                        key: orderData.key_id,
+                        amount: orderData.amount,
+                        currency: orderData.currency,
+                        name: "Hostel Management System",
+                        description: "Application Registration Fee",
+                        order_id: orderData.order_id,
+                        handler: async function (response) {
+                            // Verify Payment
+                            const verifyRes = await fetch('/api/student/fees/verify-payment', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    fee_id: feeId
+                                })
+                            });
+
+                            if (verifyRes.ok) {
+                                alert('Payment successful!');
+                                window.location.reload();
+                            } else {
+                                alert('Payment verification failed');
+                            }
+                        },
+                        theme: {
+                            color: "#4F46E5"
+                        }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                }
+            } catch (e) {
+                console.error(e);
+                alert('An error occurred during payment');
+            }
+        }
+
+        function showMockCheckout(amount, orderId) {
+            return new Promise(resolve => {
+                const ov = document.createElement('div');
+                ov.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+                ov.innerHTML = `<div style="background:#fff;border-radius:16px;padding:2rem;width:340px;box-shadow:0 24px 48px rgba(0,0,0,0.25);font-family:'Inter',sans-serif;color:#111;text-align:left;">
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;border-bottom:1px solid #eee;padding-bottom:1rem">
+                        <div style="width:36px;height:36px;background:#4F46E5;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:1.2rem">&#8377;</div>
+                        <div style="flex:1"><div style="font-weight:700;color:#111">Application Fee</div><div style="font-size:.72rem;color:#aaa">Mock / Test Mode</div></div>
+                    </div>
+                    <div style="background:#f5f5ff;border-radius:8px;padding:1rem;margin-bottom:1rem">
+                        <div style="font-size:.78rem;color:#666">Amount to Pay</div>
+                        <div style="font-size:1.9rem;font-weight:700;color:#4F46E5">&#8377;${amount}</div>
+                        <div style="font-size:.68rem;color:#bbb;margin-top:2px;overflow:hidden;text-overflow:ellipsis;">Order: ${orderId}</div>
+                    </div>
+                    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:.55rem .75rem;margin-bottom:1rem;font-size:.76rem;color:#92400e;text-align:left">
+                        &#9888; <strong>Mock payment</strong> &mdash; This simulates a real transaction. No real money will be charged.
+                    </div>
+                    <div style="display:flex;gap:.75rem;margin-top:1rem">
+                        <button id="mock-cancel" style="flex:1;padding:.7rem;background:#f4f4f4;border:none;border-radius:8px;cursor:pointer;font-weight:600;color:#555">Cancel</button>
+                        <button id="mock-pay" style="flex:1;padding:.7rem;background:#4F46E5;border:none;border-radius:8px;cursor:pointer;font-weight:700;color:white">Pay &#8377;${amount}</button>
+                    </div>
+                </div>`;
+                document.body.appendChild(ov);
+                ov.querySelector('#mock-pay').onclick = () => { document.body.removeChild(ov); resolve(true); };
+                ov.querySelector('#mock-cancel').onclick = () => { document.body.removeChild(ov); resolve(false); };
+            });
+        }
+
+        // Initialize
+        fetchStatus();
+    </script>
+</body>
+</html>

@@ -1,35 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hostel Management System - Login</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>University Residence Life - Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Institutional Premium Color Palette */
+            --bg-primary: #F8F9FA;
+            --bg-secondary: #FFFFFF;
+            --brand-primary: #0B2447;
+            /* Deep Navy Blue */
+            --brand-secondary: #19376D;
+            --accent: #A5D7E8;
+            /* Light Blue for subtle lines */
+            --text-main: #212529;
+            --text-muted: #6C757D;
+            --border: #E9ECEF;
+            --success: #198754;
+            --danger: #DC3545;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(11, 36, 71, 0.08);
+            --shadow-lg: 0 12px 24px rgba(11, 36, 71, 0.12);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        .serif-text {
+            font-family: 'Merriweather', serif;
+            color: var(--brand-primary);
+        }
+
+        /* Structured Navbar (Simplified for Auth Pages) */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.75rem 5%;
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar .logo {
+            font-family: 'Merriweather', serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #FFFFFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar .logo::before {
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E") no-repeat center;
+        }
+
+        /* Login Layout */
+        .page-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem 1rem;
+            background: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3') center/cover fixed;
+            position: relative;
+        }
+
+        .page-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(248, 249, 250, 0.92);
+            /* bg-primary with opacity */
+        }
+
+        .login-card {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 10;
+            border-top: 6px solid var(--brand-primary);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ced4da;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: var(--transition);
+            background: #FAFAFA;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--brand-secondary);
+            background: #FFF;
+            box-shadow: 0 0 0 3px rgba(25, 55, 109, 0.1);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--brand-primary);
+            color: #FFF;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .btn-action:hover {
+            background: var(--brand-secondary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .auth-links a {
+            color: var(--brand-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .auth-links a:hover {
+            color: var(--brand-primary);
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body class="login-body">
-    <div class="login-container">
+
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">
+            University Residence Life
+        </a>
+    </nav>
+    <div class="page-container">
         <div class="login-card">
             <div class="login-header">
-                <h2>Welcome Back</h2>
-                <p>Login to Hostel Management System</p>
+                <h2 class="serif-text">Hostel Portal</h2>
+                <p>Welcome back! Please securely log in.</p>
             </div>
             <form id="loginForm">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    <input type="email" id="email" name="email" required placeholder="name@university.edu">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required placeholder="Enter your password">
                 </div>
-                <div class="error-message" id="loginError"></div>
-                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                <div class="error-message" id="loginError"
+                    style="color:var(--danger); margin-bottom:1rem; text-align:center; font-weight: 500;"></div>
+                <button type="submit" class="btn-action">Secure Sign In</button>
             </form>
+            <div class="auth-links">
+                <a href="/">Return to Home</a> | <a href="/register">Apply for Hostel</a>
+            </div>
         </div>
     </div>
     <script src="/js/main.js"></script>
 </body>
+
 </html>

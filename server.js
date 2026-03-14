@@ -28,7 +28,19 @@ app.use('/views', express.static(path.join(__dirname, 'views')));
 
 // Default route
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
+app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'register.html'));
+});
+
+app.get('/payment', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'payment.html'));
 });
 
 // Routes
@@ -36,6 +48,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/warden', require('./routes/wardenRoutes'));
 app.use('/api/student', require('./routes/studentRoutes'));
+app.use('/api/public', require('./routes/publicRoutes'));
 
 // Dashboard views
 const { requireRole } = require('./middleware/authMiddleware');
